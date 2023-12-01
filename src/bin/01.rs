@@ -13,6 +13,8 @@ pub fn part_one(input: &str) -> Option<u32> {
     input.lines().map(|line| find_num(line.to_string())).sum::<u32>().into()
 }
 
+const WORDS: [&str; 9] = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+
 pub fn part_two(input: &str) -> Option<u32> {
     input.lines().map(|line| {
         let mut nums: Vec<String> = vec![];
@@ -20,29 +22,12 @@ pub fn part_two(input: &str) -> Option<u32> {
             if line.chars().nth(idx).unwrap().is_numeric() {
                 nums.push(line[idx..idx+1].to_string());
             } else {
-                nums.push(if line[idx..].starts_with("one") {
-                    "1"
-                } else if line[idx..].starts_with("two") {
-                    "2"
-                } else if line[idx..].starts_with ("three") {
-                    "3"
-                } else if line[idx..].starts_with ("four") {
-                    "4"
-                } else if line[idx..].starts_with ("five") {
-                    "5"
-                } else if line[idx..].starts_with ("six") {
-                    "6"
-                } else if line[idx..].starts_with ("seven") {
-                    "7"
-                } else if line[idx..].starts_with ("eight") {
-                    "8"
-                } else if line[idx..].starts_with ("nine") {
-                    "9"
-                } else if line[idx..].starts_with ("zero") {
-                    "0"
-                } else {
-                    ""
-                }.to_string())
+                for (i, word) in WORDS.iter().enumerate() {
+                    if line[idx..].starts_with(word) {
+                        nums.push((i + 1).to_string());
+                        break;
+                    }
+                }
             }
         }
         nums.concat()
