@@ -1,12 +1,11 @@
+use std::iter;
 use itertools::Itertools;
 
 advent_of_code::solution!(1);
 
 fn find_num(line: String) -> u32 {
     let full_num = line.chars().filter(|c| c.is_numeric()).collect_vec();
-    let mut num = full_num.first().unwrap().to_string();
-    num.push(*full_num.last().unwrap());
-    num.parse::<u32>().unwrap()
+    full_num.iter().take(1).chain(iter::once(full_num.last().unwrap())).collect::<String>().parse::<u32>().unwrap()
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
