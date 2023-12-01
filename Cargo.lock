@@ -4,11 +4,7 @@ version = 3
 
 [[package]]
 name = "advent_of_code"
-<<<<<<< HEAD
 version = "0.9.3"
-=======
-version = "0.9.2"
->>>>>>> 767dd1b (Initial commit)
 dependencies = [
  "itertools",
  "pico-args",
