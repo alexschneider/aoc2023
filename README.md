@@ -108,7 +108,7 @@ In order to submit part of a solution for checking, append the `--submit <part>`
 
 ```sh
 cargo all
-
+c
 # output:
 #     Running `target/release/advent_of_code`
 # ----------
