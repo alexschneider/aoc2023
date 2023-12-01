@@ -19,6 +19,7 @@ pub fn read_file(folder: &str, day: Day) -> String {
     f.expect("could not open input file")
 }
 
+<<<<<<< HEAD
 /// Helper function that reads a text file to string, appending a part suffix. E.g. like `01-2.txt`.
 #[must_use]
 pub fn read_file_part(folder: &str, day: Day, part: u8) -> String {
@@ -31,6 +32,8 @@ pub fn read_file_part(folder: &str, day: Day, part: u8) -> String {
     f.expect("could not open input file")
 }
 
+=======
+>>>>>>> 767dd1b (Initial commit)
 /// Creates the constant `DAY` and sets up the input and runner for each part.
 #[macro_export]
 macro_rules! solution {
