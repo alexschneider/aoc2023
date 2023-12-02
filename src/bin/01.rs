@@ -16,20 +16,19 @@ const WORDS: [&str; 9] = ["one", "two", "three", "four", "five", "six", "seven",
 
 pub fn part_two(input: &str) -> Option<u32> {
     input.lines().map(|line| {
-        let mut nums: Vec<String> = vec![];
-        for idx in 0..line.len() {
+        (0..line.len()).map(|idx| {
             if line.chars().nth(idx).unwrap().is_numeric() {
-                nums.push(line[idx..idx+1].to_string());
+                line[idx..idx+1].to_string()
             } else {
-                for (i, word) in WORDS.iter().enumerate() {
+                WORDS.iter().enumerate().filter_map(|(i, word)| {
                     if line[idx..].starts_with(word) {
-                        nums.push((i + 1).to_string());
-                        break;
+                        Some((i + 1).to_string())
+                    } else {
+                        None
                     }
-                }
+                }).next().unwrap_or("".to_string())
             }
-        }
-        nums.concat()
+        }).collect()
     }).map(find_num).sum::<u32>().into()
 }
 
@@ -39,13 +38,13 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        let result = part_one(&advent_of_code::template::read_file("examples", DAY));
+        let result = part_one(&advent_of_code::template::read_file_part("examples", DAY, 1));
         assert_eq!(result, Some(142));
     }
 
     #[test]
     fn test_part_two() {
-        let result = part_two(&advent_of_code::template::read_file("examples", DAY));
+        let result = part_two(&advent_of_code::template::read_file_part("examples", DAY, 2));
         assert_eq!(result, Some(281));
     }
 }
