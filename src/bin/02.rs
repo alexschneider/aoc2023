@@ -15,6 +15,7 @@ fn parse_nums_color(cube: &str) -> (u32, &str) {
     let num = num.parse::<u32>().unwrap();
     (num, color)
 }
+
 pub fn part_one(input: &str) -> Option<u32> {
     let mut ans = 0;
     for (id, line) in input.lines().enumerate() {
@@ -48,21 +49,9 @@ pub fn part_two(input: &str) -> Option<u32> {
             for cube in round.split(',') {
                 let (num, color) = parse_nums_color(cube);
                 match color {
-                    "red" => {
-                        if num > min_red {
-                            min_red = num
-                        }
-                    }
-                    "green" => {
-                        if num > min_green {
-                            min_green = num
-                        }
-                    }
-                    "blue" => {
-                        if num > min_blue {
-                            min_blue = num
-                        }
-                    }
+                    "red" => min_red = num.max(min_red),
+                    "green" => min_green = num.max(min_green),
+                    "blue" => min_blue = num.max(min_blue),
                     _ => panic!("Unexpected input: {}", cube),
                 };
             }
