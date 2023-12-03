@@ -7,12 +7,12 @@ const GREEN_CUBES: u32 = 13;
 const BLUE_CUBES: u32 = 14;
 
 fn rounds(line: &str) -> impl Iterator<Item = &str> {
-    line.split(':').nth(1).unwrap_or("").split(';')
+    line.trim().split(':').nth(1).unwrap().split(';')
 }
 
-fn parse_nums_color(cube: &str) -> (u32, &str) {
+fn parse_num_color(cube: &str) -> (u32, &str) {
     let (num, color) = cube.trim().split(' ').tuple_windows().next().unwrap();
-    let num = num.parse::<u32>().unwrap();
+    let num = num.parse().unwrap();
     (num, color)
 }
 
@@ -22,7 +22,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         let mut possible: bool = true;
         for round in rounds(line) {
             for cube in round.split(',') {
-                let (num, color) = parse_nums_color(cube);
+                let (num, color) = parse_num_color(cube);
                 let possible_round = match color {
                     "red" => num <= RED_CUBES,
                     "green" => num <= GREEN_CUBES,
@@ -47,7 +47,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         let (mut min_red, mut min_green, mut min_blue) = (0, 0, 0);
         for round in rounds(line) {
             for cube in round.split(',') {
-                let (num, color) = parse_nums_color(cube);
+                let (num, color) = parse_num_color(cube);
                 match color {
                     "red" => min_red = num.max(min_red),
                     "green" => min_green = num.max(min_green),
