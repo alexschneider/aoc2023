@@ -6,10 +6,11 @@ advent_of_code::solution!(3);
 
 type Grid = Vec<Vec<char>>;
 type Symbols = HashMap<(usize, usize), char>;
+type NumberCoordinates = (usize, usize, String);
 
-fn numbers_iter(grid: Grid) -> impl Iterator<Item = (usize, usize, String)> {
-    let mut it = vec![];
-    for (y, row) in grid.iter().enumerate() {
+fn numbers_iter<'a>(grid: &'a Grid) -> impl Iterator<Item = NumberCoordinates> + 'a{
+    grid.iter().enumerate().flat_map(|(y, row)| {
+        let mut it = vec![];
         let mut current_num = vec![];
         for (x, ch) in row.iter().enumerate() {
             if ch.is_numeric() {
@@ -24,8 +25,8 @@ fn numbers_iter(grid: Grid) -> impl Iterator<Item = (usize, usize, String)> {
             let num = current_num.iter().collect::<String>();
             it.push((row.len() - num.len(), y, num));
         }
-    }
-    it.into_iter()
+        it
+    })
 }
 
 fn symbol_dict(grid: &Grid) -> Symbols {
@@ -33,12 +34,10 @@ fn symbol_dict(grid: &Grid) -> Symbols {
     for (y, row) in grid.iter().enumerate() {
         for (x, ch) in row.iter().enumerate() {
             if !ch.is_numeric() && *ch != '.' {
-                print!("{}", ch);
                 symbol_dict.insert((x, y), *ch);
             }
         }
     }
-    println!("end");
     symbol_dict
 }
 
@@ -54,7 +53,7 @@ fn parse_input(input: &str) -> (Grid, Symbols) {
 pub fn part_one(input: &str) -> Option<u32> {
     let (grid, symbols) = parse_input(input);
     let mut ans = 0;
-    for (x, y, num) in numbers_iter(grid) {
+    for (x, y, num) in numbers_iter(&grid) {
         let mut found_num = 0;
         for sy in y.saturating_sub(1)..y + 2 {
             for sx in x.saturating_sub(1)..x + num.len() + 1 {
@@ -75,7 +74,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         .filter(|(_, ch)| **ch == '*')
         .map(|((x, y), _)| ((*x, *y), vec![]))
         .collect();
-    for (x, y, num) in numbers_iter(grid) {
+    for (x, y, num) in numbers_iter(&grid) {
         for sy in y.saturating_sub(1)..y + 2 {
             for sx in x.saturating_sub(1)..x + num.len() + 1 {
                 if let Some(gear) = gear_symbols.get_mut(&(sx, sy)) {
