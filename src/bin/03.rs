@@ -30,15 +30,18 @@ fn numbers_iter(grid: &Grid) -> impl Iterator<Item = NumberCoordinates> + '_ {
 }
 
 fn symbol_dict(grid: &Grid) -> Symbols {
-    let mut symbol_dict: Symbols = HashMap::new();
-    for (y, row) in grid.iter().enumerate() {
-        for (x, ch) in row.iter().enumerate() {
-            if !ch.is_numeric() && *ch != '.' {
-                symbol_dict.insert((x, y), *ch);
-            }
-        }
-    }
-    symbol_dict
+    grid.iter()
+        .enumerate()
+        .flat_map(|(y, row)| {
+            row.iter().enumerate().filter_map(move |(x, ch)| {
+                if !ch.is_numeric() && *ch != '.' {
+                    Some(((x, y), *ch))
+                } else {
+                    None
+                }
+            })
+        })
+        .collect()
 }
 
 fn parse_input(input: &str) -> (Grid, Symbols) {
