@@ -1,21 +1,20 @@
 use std::collections::{HashMap, HashSet};
 
+use itertools::Itertools;
+
 advent_of_code::solution!(4);
 
 fn find_winners(line: &str) -> usize {
     let card = line.split(':').nth(1).unwrap().trim();
-    let winning = card
-        .split('|')
-        .next()
-        .unwrap()
+
+    let (winning, mine) = card.split('|').collect_tuple().unwrap();
+    let winning = winning
         .trim()
         .split(' ')
         .filter(|s| !s.is_empty())
         .collect::<HashSet<&str>>();
-    let mine = card
-        .split('|')
-        .nth(1)
-        .unwrap()
+
+    let mine = mine
         .trim()
         .split(' ')
         .filter(|s| !s.is_empty())
@@ -29,7 +28,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     for line in input.lines() {
         let num_winners = find_winners(line);
         if num_winners > 0 {
-            accum += 2_u32.pow(num_winners as u32 - 1);
+            accum += 1 << (num_winners - 1);
         }
     }
     Some(accum)
@@ -41,7 +40,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         let current_copies = *next_copies.get(&card_num).unwrap_or(&1);
         next_copies.insert(card_num, current_copies);
 
-        let num_winners = find_winners(line);
+        let num_winners: usize = find_winners(line);
         for card in card_num + 1..card_num + num_winners + 1 {
             next_copies.insert(card, next_copies.get(&card).unwrap_or(&1) + current_copies);
         }
