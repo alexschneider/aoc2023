@@ -1,5 +1,3 @@
-use core::time;
-
 use itertools::Itertools;
 
 advent_of_code::solution!(6);
