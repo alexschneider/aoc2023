@@ -5,7 +5,7 @@ advent_of_code::solution!(6);
 pub fn part_one(input: &str) -> Option<u32> {
     let (times, distances) = input
         .lines()
-        .map(str::split_ascii_whitespace)
+        .map(str::split_whitespace)
         .map(|i| i.skip(1))
         .map(|i| i.map(|s| s.parse::<u32>().unwrap()))
         .collect_tuple()?;
@@ -20,7 +20,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 pub fn part_two(input: &str) -> Option<u32> {
     let (time, distance) = input
         .lines()
-        .map(str::split_ascii_whitespace)
+        .map(str::split_whitespace)
         .map(|i| {
             i.skip(1)
                 .fold(String::new(), |mut acc, s| {
