@@ -12,13 +12,10 @@ fn parse_input(input: &str) -> (impl Iterator<Item = char> + Clone + '_, NodeMap
 
     lines.next();
     let nodes = lines
-        .map(|line| {
-            let (node, leafs) = line.split_once(" = ").unwrap();
-            let (l_leaf, r_leaf) = leafs
-                .trim_matches(|ch: char| ch == '(' || ch == ')')
-                .split_once(", ")
-                .unwrap();
-            (node, (l_leaf, r_leaf))
+        .filter_map(|line| {
+            let (node, leafs) = line.split_once(" = ")?;
+            let (l_leaf, r_leaf) = leafs.trim_matches(&['(', ')'][..]).split_once(", ")?;
+            Some((node, (l_leaf, r_leaf)))
         })
         .collect::<NodeMap>();
     (instructions, nodes)
@@ -30,13 +27,13 @@ pub fn part_one(input: &str) -> Option<u32> {
     let mut current_node = "AAA";
 
     while current_node != "ZZZ" {
-        let (l_leaf, r_leaf) = nodes.get(current_node).unwrap();
-        let next_instruction = instructions.next().unwrap();
-        if next_instruction == 'L' {
-            current_node = l_leaf;
+        let (l_leaf, r_leaf) = nodes.get(current_node)?;
+        let next_instruction = instructions.next()?;
+        current_node = if next_instruction == 'L' {
+            l_leaf
         } else {
-            current_node = r_leaf;
-        }
+            r_leaf
+        };
         steps += 1;
     }
     Some(steps)
@@ -50,21 +47,21 @@ pub fn part_two(input: &str) -> Option<u128> {
         .cloned()
         .collect::<Vec<&str>>();
 
-    let starting_node_counts = starting_nodes.iter().map(|&s| {
+    let starting_node_counts = starting_nodes.iter().filter_map(|&s| {
         let mut current_instructions = instructions.clone();
         let mut current_node = s;
         let mut steps = 0;
         while !current_node.ends_with('Z') {
-            let (l_leaf, r_leaf) = nodes.get(current_node).unwrap();
-            let next_instruction = current_instructions.next().unwrap();
-            if next_instruction == 'L' {
-                current_node = l_leaf;
+            let (l_leaf, r_leaf) = nodes.get(current_node)?;
+            let next_instruction = current_instructions.next()?;
+            current_node = if next_instruction == 'L' {
+                l_leaf
             } else {
-                current_node = r_leaf;
-            }
+                r_leaf
+            };
             steps += 1;
         }
-        steps
+        Some(steps)
     });
 
     Some(starting_node_counts.fold(1, |acc, x| acc.lcm(&x)))
